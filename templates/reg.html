@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <script src="{% static 'jquery.js' %}"></script>
+    <script>
+        $(function(){
+            $('#btn').click(function(){
+                $.post('/member/reg',{
+                card:$('#card').val(),
+                phone:$('#phone').val(),
+                name:$('#name').val(),
+                gender:$('#gender').val(),
+                bir:$('#birthday').val(),
+                pwd1:$('#pwd1').val(),
+                pwd2:$('#pwd2').val(),
+                csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val()
+                },function(data){
+                    if(data==401){
+                        $('#sp_card').html='账号输入错误'
+                    }else if(data==402){
+                        $('#sp_phone').html='手机号输入有误'
+                    }else if(data==403){
+                        $('#sp_name').html = '姓名输入有误'
+                    }else if(data==404){
+                        $('#sp_gender').html = '性别选择有误'
+                    }else if(data==405){
+                        $('#sp_birthday').html = '生日输入有误'
+                    }else if(data==406){
+                        $('#sp_pwd1').html = '密码输入有误'
+                    }else if(data==407){
+                        $('#sp_pwd2').html = '密码二次输入有误'
+                    }else if(data==409){
+                        alert('该账号已存在')
+                        location.href='http://127.0.0.1:8080/member/reg'
+                    }else if(data==408){
+                        alert('两次密码不一致')
+                        location.href='http://127.0.0.1:8080/member/reg'
+                    }else if(data==410){
+                        alert('注册成功')
+                        location.href='http://127.0.0.1:8080/users/index'
+                    }else if(data==411){
+                        alert('注册失败')
+                        location.href='http://127.0.0.1:8080/member/reg'
+                    }
+
+                })
+
+            })
+        })
+
+    </script>
+</head>
+<body>
+{% csrf_token %}
+    <span>欢迎:{{nickname}}</span>
+    <div>
+        <p>
+            会员卡号:
+            <input type="text" placeholder="请输入8位数字" maxlength="8" id="card"> <span id="sp_card"></span>
+        </p>
+        <p>
+            会员手机号:
+            <input type="text" id="phone" maxlength="11"><span id="sp_phone"></span>
+        </p>
+        <p>
+            会员姓名:
+            <input type="text" id="name"> <span id="sp_name"></span>
+        </p>
+        <p>
+            会员性别:
+            <td>
+            <select id="gender">
+            <option>请选择</option>
+            <option value = "1">男</option>
+            <option value = "2">女</option>
+            </select>
+            </td> <span id="sp_gender"></span>
+        </p>
+        <p>
+            会员生日:
+            <input type="date" id="birthday"> <span id="sp_birthday"></span>
+        </p>
+        <p>
+            会员密码:
+            <input type="password" maxlength="6" placeholder="仅支持六位数字" id="pwd1"> <span id="sp_pwd1"></span>
+        </p>
+        <p>
+            再次输入密码:
+            <input type="password" maxlength="6" id="pwd2"> <span id="sp_pwd2"></span>
+        </p>
+        <button type="button" id="btn">提交</button>
+    </div>
+
+<a href="/users/index">首页</a>
+
+
+
+
+</body>
+</html>

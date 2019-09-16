@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <script src="{% static 'jquery.js' %}"></script>
+
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td>卡号</td>
+            <td>手机号</td>
+            <td>姓名</td>
+            <td>性别</td>
+            <td>生日</td>
+            <td>积分</td>
+            <td>余额</td>
+        </tr>
+        {% for i in data %}
+            <tr>
+                <td>{{i.card}}</td>
+                <td>{{i.phone}}</td>
+                <td>{{i.name}}</td>
+                <td>{{i.gender}}</td>
+                <td>{{i.bir}}</td>
+                <td>{{i.inte}}</td>
+                <td>{{i.money}}</td>
+            </tr>
+        {% endfor %}
+
+
+    </table>
+
+    <a href="/users/index">首页</a>
+
+
+
+</body>
+</html>

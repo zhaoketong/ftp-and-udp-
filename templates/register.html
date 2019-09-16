@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+    {% load static %}
+    <script src="{% static  'jquery.js' %}"></script>
+    <script>
+        $(function(){
+            $('#btn_reg').click(function(){
+                $.post("/users/register_server/",{
+                    nickname: $('#nickname').val(),
+                    account: $('#account').val(),
+                    pwd1: $('#pwd1').val(),
+                    pwd2: $('#pwd2').val(),
+                    csrfmiddlewaretoken:$("[name='csrfmiddlewaretoken']").val()},
+                function(data){
+                    alert(data)
+                    if(data=="注册成功"){
+                        setInterval(go, 1000);
+                        var x=3; //利用了全局变量来执行
+                            function go(){
+                            x--;
+                            if(x>0){
+                            $('#sp').html(x)
+                            }else{
+                            location.href='http://127.0.0.1:8080/users/login';
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+<body>
+        {% csrf_token %}
+        <p>
+        请输入用户名: <input type="text" id="nickname" placeholder="仅支持数字字母下划线">
+        </p>
+        <p>
+        请输入账号: <input type="text" id="account" placeholder="最大长度为8位" maxlength="8">
+        </p>
+        <p>
+        请输入密码: <input type="password" id="pwd1" maxlength="6" placeholder="最大长度为6位">
+        </p>
+        <p>
+        请再次输入密码: <input type="password" id="pwd2" maxlength="6">
+        </p>
+        <button id="btn_reg">提交</button>
+        <span id="sp"></span>
+
+</body>
+</html>

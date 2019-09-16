@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <script src="{% static 'jquery.js' %}"></script>
+    <script>
+        $(function(){
+            $('#btn_query').click(function(){
+                $.post('/member/info',{
+                    card:$('#card').val(),
+                    csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val()
+                },function(data){
+                    if(data==501){
+                        alert('没有会员信息')
+                        location.href='http://127.0.0.1:8080/member/info'
+                    }else{
+                        var obj = JSON.parse(data)
+                        $('#name').html(obj.name)
+                        $('#phone').html(obj.phone)
+                        $('#gender').html(obj.gender)
+                        $('#bir').html(obj.bir)
+                        $('#inte').html(obj.inte)
+                        $('#money').html(obj.money)
+                        }
+                })
+            })
+            $('#rech_record').click(function(){
+                $.get('/member/rech_record',{
+                    card:$('#card').val(),
+                },function(data){
+                    var data = JSON.parse(data)
+                    var obj = '<tr><td>卡号</td><td>充值金额</td><td>充值时间</td></tr>'
+                    for(var i=0;i<data.length;i++){
+                        obj += '<tr>' + '<td>' + data[i]['card'] + '</td>' + '<td>' + data[i]['money'] + '</td>'
+                        +'<td>' + data[i]['tim'] + '</td></tr>'
+                    }
+                    $('#re_show').html(obj)
+                })
+            })
+
+            $('#con_record').click(function(){
+                $.get('/member/con_record',{
+                    card:$('#card').val(),
+                },function(data){
+                    var data = JSON.parse(data)
+                    var obj = '<tr><td>卡号</td><td>消费金额</td><td>消费时间</td></tr>'
+                    for(var i=0;i<data.length;i++){
+                        obj += '<tr>' + '<td>' + data[i]['card'] + '</td>' + '<td>' + data[i]['money'] + '</td>'
+                        +'<td>' + data[i]['tim'] + '</td></tr>'
+                    }
+                    $('#con_show').html(obj)
+                })
+            })
+        })
+
+    </script>
+
+</head>
+<body>
+{% csrf_token %}
+    <div>
+        <p>
+            请输入会员卡号: <input type="text" id="card" maxlength="8">
+        </p>
+        <p>
+            <button id="btn_query">查询</button>
+        </p>
+    </div>
+    <div>
+        欢迎:<span id="name"></span>
+    </div>
+    <div>
+        电话: <span id="phone"></span>
+    </div>
+    <div>
+        性别: <span id="gender"></span>
+    </div>
+    <div>
+        生日: <span id="bir"></span>
+    </div>
+    <div>
+        积分: <span id="inte"></span>
+    </div>
+    <div>
+        余额: <span id="money"></span>
+    </div>
+    <div>
+        <button id="rech_record">充值记录</button>
+    </div>
+    <div >
+        <table id="re_show" border="1"></table>
+    </div>
+    <div>
+        <button id="con_record">消费记录</button>
+    </div>
+    <div>
+        <table id="con_show" border="1"></table>
+    </div>
+    <a href="/users/index">首页</a>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

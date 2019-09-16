@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <script src="{% static 'jquery.js' %}"></script>
+    <script>
+        $(function(){
+            $('#btn_rech').click(function(){
+                $.post('/member/rech',{
+                    card:$('#card').val(),
+                    csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val(),
+                },function(data){
+                    if(data==601){
+                        $('#sp_card').html('该会员不存在')
+                    }else{
+                        $('#name').html(data)
+                    }
+                })
+            })
+            $('#btn_re').click(function(){
+                $.post('/member/rech_server',{
+                    num:$('#num').val(),
+                    csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val(),
+                },function(data){
+                    if(data==602){
+                        alert('充值失败')
+                        location.href='http://127.0.0.1:8080/member/rech'
+                    }else{
+                        alert('充值成功')
+                        location.href='http://127.0.0.1:8080/users/index'
+                    }
+                })
+            })
+        })
+
+    </script>
+
+</head>
+<body>
+{% csrf_token %}
+    <div>
+        <p>
+            请输入会员卡号: <input type="text" id="card" maxlength="8">
+        </p>
+        <p>
+            <button id="btn_rech">查询</button>
+            <span id="sp_card"></span>
+        </p>
+    </div>
+
+    <div>
+        欢迎尊贵会员: <span id="name"></span>
+    </div>
+    <div>
+        <span>
+            本次充值金额: <input type="text" id="num">
+        </span>
+    </div>
+    <div>
+        <button id="btn_re">确认充值</button>
+    </div>
+<a href="/users/index">首页</a>
+
+</body>
+</html>

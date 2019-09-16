@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <script src="{% static 'jquery.js' %}"></script>
+    <script>
+        $(function(){
+            $('#btn_que').click(function(){
+                $.post('/member/consume',{
+                    card:$('#card').val(),
+                    pwd:$('#pwd').val(),
+                    csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val()
+                },function(data){
+                    if(data==701){
+                        $('#sp_card').html('账号不存在')
+                    }else if(data==702){
+                        $('#sp_pwd').html('密码输入有误')
+                    }else{
+                        $('#name').html(data)
+                    }
+                })
+            })
+
+            $('#consume').click(function(){
+                $.post('/member/consume_server',{
+                    money:$('#money').val(),
+                    csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val()
+                },function(data){
+                    if(data==703){
+                        $('#sp_con').html('消费失败')
+                    }else if(data==704){
+                        $('#sp_con').html('会员余额不足,请充值')
+                    }else{
+                        alert('消费成功'+data)
+                        location.href='http://127.0.0.1:8080/users/index';
+                    }
+                })
+            })
+        })
+
+    </script>
+</head>
+<body>
+{% csrf_token %}
+    <div>
+        <p>
+            请输入会员卡号: <input type="text" id="card" maxlength="8"> <span id="sp_card"></span>
+        </p>
+        <p>
+            请输入密码: <input type="password" id="pwd" maxlength="6"> <span id="sp_pwd"></span>
+        </p>
+        <p>
+            <button id="btn_que">查询</button>
+        </p>
+    </div>
+    <div>
+        <p>
+            欢迎尊贵会员: <span id="name"></span>
+        </p>
+        <p>
+            输入消费金额: <input type="text" id="money">
+        </p>
+        <p>
+            <button id="consume">确认</button>
+            <span id="sp_con"></span>
+        </p>
+    </div>
+
+<a href="/users/index">首页</a>
+
+</body>
+</html>
